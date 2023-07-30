@@ -1,0 +1,263 @@
+# NOTE Lines must not exceed 132 characters
+# Robot module configurations : general handling of movement G-codes and slicing into moves
+
+#include myconifg
+#I/O Konfiguration für Placemate 650 PNP
+
+default_feed_rate                            40000           	# Default rate ( mm/minute ) for G1/G2/G3 moves
+default_seek_rate						   	 40000            	# Default rate ( mm/minute ) for G0 moves
+
+# Arm solution configuration : Cartesian robot. Translates mm positions into stepper positions
+alpha_steps_per_mm                           124.75       		# Steps per mm for alpha stepper
+beta_steps_per_mm                            124.75       		# Steps per mm for beta stepper
+gamma_steps_per_mm                           161.06          	# Steps per mm for gamma stepper
+
+# Planner module configuration : Look-ahead and acceleration configuration
+planner_queue_size                           32               	# DO NOT CHANGE THIS UNLESS YOU KNOW EXACTLY WHAT YOU ARE DOING
+acceleration                                 6000             	# Acceleration in mm/second/second.
+z_acceleration                               10000             	# Acceleration for Z only moves in mm/s^2, 0 uses acceleration which is the default. DO NOT SET ON A DELTA
+acceleration_ticks_per_second                10000             	# Number of times per second the speed is updated
+junction_deviation                           0                	# Similar to the old "max_jerk", in millimeters,
+																# see https://github.com/grbl/grbl/blob/master/planner.c
+																# and https://github.com/grbl/grbl/wiki/Configuring-Grbl-v0.8
+																# Lower values mean being more careful, higher values means being
+																# faster and have more jerk
+z_junction_deviation                     	 0.0				# for Z only moves, -1 uses junction_deviation, zero disables junction_deviation on z moves DO NOT SET ON A DELTA
+
+# Stepper module configuration
+microseconds_per_step_pulse                  1             	 	# Duration of step pulses to stepper drivers, in microseconds
+base_stepping_frequency                      100000           	# Base frequency for stepping, higher gives smoother movement
+
+# Cartesian axis speed limits
+x_axis_max_speed                             40000            	# mm/min
+y_axis_max_speed                             40000	          	# mm/min
+z_axis_max_speed                             90000           	# mm/min
+
+# Stepper module pins ( ports, and pin numbers, appending "!" to the number will invert a pin )
+alpha_step_pin                               2.0o             	# Pin for alpha stepper step signal
+alpha_dir_pin                                0.5o             	# Pin for alpha stepper direction
+alpha_en_pin                                 0.4!o             	# Pin for alpha enable pin
+alpha_max_rate                               40000.0          	# mm/min
+
+beta_step_pin                                2.1o             	# Pin for beta stepper step signal
+beta_dir_pin                                 0.11!o           	# Pin for beta stepper direction
+beta_en_pin                                  0.10!o             # Pin for beta enable
+beta_max_rate                                40000.0          	# mm/min
+
+gamma_step_pin                               2.2             	# Pin for gamma stepper step signal
+gamma_dir_pin                                0.20!           	# Pin for gamma stepper direction
+gamma_en_pin                                 0.19            	# Pin for gamma enable
+gamma_current                                0.5              	# Z stepper motor current
+gamma_max_rate                               7000.0          	# mm/min
+
+# A axis
+delta_steps_per_mm                    		 8.8888   		  	# may be steps per degree for example
+delta_step_pin                               2.3              	# Pin for delta stepper step signal
+delta_dir_pin                                0.22             	# Pin for delta stepper direction
+delta_en_pin                                 0.21             	# Pin for delta enable
+delta_current                                0.1              	# Z stepper motor current
+delta_max_rate                               30000.0            	# mm/min
+delta_acceleration                           5000.0            	# mm/sec²
+
+# B axis
+epsilon_steps_per_mm                 		 8.8888   		  	# may be steps per degree for example
+epsilon_step_pin                             2.8              	# Pin for delta stepper step signal
+epsilon_dir_pin                              2.13              	# Pin for delta stepper direction
+epsilon_en_pin                               4.29             	# Pin for delta enable
+epsilon_current                              0.1                # Z stepper motor current
+epsilon_max_rate                             30000.0 	            # mm/min
+epsilon_acceleration                         5000.0            	# mm/sec²
+
+# C axis
+#zeta_steps_per_mm 		                     100     			# may be steps per degree for example
+#zeta_step_pin                                xx              	# Pin for delta stepper step signal
+#zeta_dir_pin                                 xx             	# Pin for delta stepper direction
+#zeta_en_pin                                  xx             	# Pin for delta enable
+#zeta_current                                 0.2              	# Z stepper motor current
+#zeta_max_rate                                300.0            	# mm/min
+#zeta_acceleration                            500.0				# mm/sec²
+
+
+# Serial communications configuration ( baud rate default to 9600 if undefined )
+uart0.baud_rate                              115200           	# Baud rate for the default hardware serial port
+second_usb_serial_enable                     true            	# This enables a second usb serial port (to have both pronterface
+																# and a terminal connected)
+msd_disable									 true              	# disable the MSD (USB SDCARD) when set to true (needs special binary)
+dfu_enable                                   true              	# for linux developers, set to true to enable DFU
+leds_disable								 false			  	#Disable the 4 flashing LEDs on the board
+play_led_disable							 false			  	#Disable the “play” status LED
+kill_button_enable							 true			  	#Enable the “kill” button
+kill_button_pin								 3.26^			  	#Pin for the “kill” button
+
+
+# Endstops
+endstops_enable                              true             	# the endstop module is enabled by default and can be disabled here
+#endstop_debounce_count                      100             	# uncomment if you get noise on your endstops, default is 100
+
+# X
+alpha_min_endstop                            1.24^            	# add a ! to invert if endstop is NO connected to ground
+alpha_max_endstop                            1.25^              # NOTE set to nc if this is not installed
+alpha_homing_direction                       home_to_min      	# or set to home_to_max and set alpha_max
+alpha_min                                    -1               	# this gets loaded after homing when home_to_min is set
+alpha_max                                    649              	# this gets loaded after homing when home_to_max is set
+alpha_max_travel							 649			  	#This determines how far the X axis can travel looking for the endstop before it gives up
+alpha_fast_homing_rate_mm_s                  100              	# feedrates in mm/second
+alpha_slow_homing_rate_mm_s                  25               	# "
+alpha_homing_retract_mm                      1               	# distance in mm
+
+# Y
+beta_min_endstop                             1.26^            	#
+beta_max_endstop                             1.27^              #
+beta_homing_direction                        home_to_min      	#
+beta_min                                     -1               	#
+beta_max                                     670              	#
+beta_max_travel							 	 700			  	#This determines how far the X axis can travel looking for the endstop before it gives up
+beta_fast_homing_rate_mm_s                   60              	# "
+beta_slow_homing_rate_mm_s                   25               	# "
+beta_homing_retract_mm                       1               	# "
+
+# Z
+gamma_min_endstop                            1.28^            	#
+gamma_max_endstop                            nc		     		#
+gamma_homing_direction                       home_to_min      	#
+gamma_min                                    0               	#
+gamma_max                                    44              	#
+gamma_max_travel							 45			  		#This determines how far the X axis can travel looking for the endstop before it gives up
+gamma_fast_homing_rate_mm_s                  50               	# "
+gamma_slow_homing_rate_mm_s                  15               	# "
+gamma_homing_retract_mm                      0.5               	# "
+
+# optional order in which axis will home, default is they all home at the same time,
+# if this is set it will force each axis to home one at a time in the specified order
+homing_order                                 ZXY              	# z axis followed by x then y last
+
+switch.n1_vac.enable                         true
+switch.n1_vac.input_on_command               M800
+switch.n1_vac.input_off_command              M801
+switch.n1_vac.output_pin                     2.7
+switch.n1_vac.output_type                    digital
+
+switch.n1_exh.enable                         true
+switch.n1_exh.input_on_command               M802
+switch.n1_exh.input_off_command              M803
+switch.n1_exh.output_pin                     2.5
+switch.n1_exh.output_type                    pwm
+
+switch.n2_vac.enable                         true
+switch.n2_vac.input_on_command               M804
+switch.n2_vac.input_off_command              M805
+switch.n2_vac.output_pin                     2.4
+switch.n2_vac.output_type                    pwm
+
+switch.n2_exh.enable                         true
+switch.n2_exh.input_on_command               M806
+switch.n2_exh.input_off_command              M807
+switch.n2_exh.output_pin                     2.6
+switch.n2_exh.output_type                    digital
+
+switch.vac.enable                            true
+switch.vac.input_on_command                  M808
+switch.vac.input_off_command                 M809
+switch.vac.output_pin                        1.23
+switch.vac.output_type                       digital
+
+switch.led.enable                            true
+switch.led.input_on_command                  M810
+switch.led.input_off_command                 M811
+switch.led.output_pin                        1.22
+switch.led.output_type                       digital
+
+soft_endstop.enable        					 true          		# Enable soft endstops
+soft_endstop.x_min          				 -0.001            	# Minimum X position
+soft_endstop.x_max						 	 550          		# Maximum X position
+soft_endstop.y_min        					 -0.001            	# Minimum Y position
+soft_endstop.y_max          				 550          		# Maximum Y position
+soft_endstop.z_min   				         -23           		# Minimum Z position
+soft_endstop.z_max        					 23        			# Maximum Z position
+soft_endstop.halt           				 true         		# Whether to issue a HALT state when hitting a soft endstop (if false, will just ignore commands that would exceed the limit)
+
+alpha_limit_enable                           true 				# set to true to enable X min and max limit switches
+beta_limit_enable                            true            	# set to true to enable Y min and max limit switches
+gamma_limit_enable                           false            	# set to true to enable Z min and max limit switches
+
+# Only needed on a smoothieboard
+currentcontrol_module_enable                 true             	#
+
+return_error_on_unhandled_gcode              false  			#
+
+
+
+
+
+
+
+
+#Input und Output Verarbeitung
+
+
+switch.taster_grundstellung.enable                	true        # Enable this module
+switch.taster_grundstellung.input_pin             	2.11^       # Pin where pause button is connected
+switch.taster_grundstellung.output_off_command   	G28ZG28YX   # Command to turn the spindle OFF
+switch.taster_grundstellung.output_on_command     	G28ZG28YX   # Command to turn the spindle ON eg M3 S1000  
+switch.taster_grundstellung.input_pin_behavior    	momentray   # This pin toggles between it's on and off states each time it is pressed and released
+
+switch.taster_stop.enable              				true        # Enable this module
+switch.taster_stop.input_pin						#           # Pin where pause button is connected
+switch.taster_stop.output_on_command    			#       	# Command to turn the spindle ON eg M3 S1000  
+switch.taster_stop.output_off_command    			#        	# Command to turn the spindle OFF
+switch.taster_stop.input_pin_behavior    			momentray   # This pin toggles between it's on and off states each time it is pressed and released
+
+switch.taster_start.enable              			true        # Enable this module
+switch.taster_start.input_pin          				3.25^       # Pin where pause button is connected
+switch.taster_start.output_on_command               M999        # Command to turn the spindle ON eg M3 S1000  
+switch.taster_start.output_off_command              M999        # Command to turn the spindle OFF
+switch.taster_start.input_pin_behavior  			momentray   # This pin toggles between it's on and off states each time it is pressed and released
+
+switch.taster_teach.enable              			true        # Enable this module
+switch.taster_teach.input_pin          				1.30^       # Pin where pause button is connected
+switch.taster_teach.output_on_command                	# Command to turn the spindle ON eg M3 S1000  
+switch.taster_teach.output_off_command               		# Command to turn the spindle OFF
+switch.taster_teach.input_pin_behavior  			momentray   # This pin toggles between it's on and off states each time it is pressed and released
+
+switch.taster_vakuum.enable              			true        # Enable this module
+switch.taster_vakuum.input_pin          			1.31^       # Pin where pause button is connected
+switch.taster_vakuum.output_on_command              M806   		# Command to turn the spindle ON eg M3 S1000  
+switch.taster_vakuum.output_off_command             M807   		# Command to turn the spindle OFF
+switch.taster_vakuum.input_pin_behavior  			toggle   # This pin toggles between it's on and off states each time it is pressed and released
+
+switch.taster_head.enable              				true		# Enable this module
+switch.taster_head.input_pin          				1.23^   	# Pin where pause button is connected
+switch.taster_head.output_on_command                G1Z0.00	       	# Command to turn the spindle ON eg M3 S1000 
+switch.taster_head.output_off_command           	G1Z0.00       		# Command to turn the spindle OFF 
+switch.taster_head.input_pin_behavior  				momentray   # This pin toggles between it's on and off states each time it is pressed and released
+
+
+switch.taster_fast.enable  	            			true       	# Enable this module
+switch.taster_fast.input_pin	          			1.22^   	# Pin where pause button is connected
+switch.taster_fast.output_on_command   		    	  	# Command to turn the spindle ON eg M3 S1000  
+switch.taster_fast.output_off_command       	       	# Command to turn the spindle OFF
+switch.taster_fast.input_pin_behavior  				toggle     	# This pin toggles between it's on and off states each time it is pressed and released
+
+switch.taster_y_jog_plus.enable              		true       	# Enable this module
+switch.taster_y_jog_plus.input_pin          		0.26^  	    # Pin where pause button is connected
+switch.taster_y_jog_plus.output_on_command            	# Command to turn the spindle ON eg M3 S1000  
+switch.taster_y_jog_plus.output_off_command        	  	# Command to turn the spindle OFF
+switch.taster_y_jog_plus.input_pin_behavior			momentray   # This pin toggles between it's on and off states each time it is pressed and released
+
+switch.taster_y_jog_minus.enable          			true       	# Enable this module
+switch.taster_y_jog_minus.input_pin        			0.23^   	# Pin where pause button is connected
+switch.taster_y_jog_minus.output_on_command        	       	# Command to turn the spindle ON eg M3 S1000  
+switch.taster_y_jog_minus.output_off_command	  	      	# Command to turn the spindle OFF
+switch.taster_y_jog_minus.input_pin_behavior  		momentray   # This pin toggles between it's on and off states each time it is pressed and released
+
+switch.taster_x_jog_plus.enable              		true       	# Enable this module
+switch.taster_x_jog_plus.input_pin          		0.25^  	    # Pin where pause button is connected
+switch.taster_x_jog_plus.output_on_command			     	# Command to turn the spindle ON eg M3 S1000  
+switch.taster_x_jog_plus.output_off_command			 		# Command to turn the spindle OFF
+switch.taster_x_jog_plus.input_pin_behavior  		momentray   # This pin toggles between it's on and off states each time it is pressed and released
+
+switch.taster_x_jog_minus.enable              		true        # Enable this module
+switch.taster_x_jog_minus.input_pin					0.24^       # Pin where pause button is connected
+switch.taster_x_jog_minus.output_on_command			       	# Command to turn the spindle ON eg M3 S1000  
+switch.taster_x_jog_minus.output_off_command				# Command to turn the spindle OFF
+switch.taster_x_jog_minus.input_pin_behavior		momentray   # This pin toggles between it's on and off states each time it is pressed and released
